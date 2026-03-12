@@ -36,13 +36,13 @@ class HandlebarsCompiler extends Compiler implements CompilerInterface
      * @param LightnCandy $lightncandy
      * @param string      $cachePath
      */
-    public function __construct(Filesystem $files, LightnCandy $lightncandy, $cachePath)
+    public function __construct(Filesystem $files, LightnCandy $lightncandy, string $cachePath)
     {
+        parent::__construct($files, $cachePath);
+
         $app = app();
 
-        $this->files = $files;
         $this->lightncandy = $lightncandy;
-        $this->cachePath = $cachePath;
 
         $this->options = $app['config']->get('handlebars');
 

@@ -19,7 +19,7 @@ class BladeCompiler extends BaseBladeCompiler implements CompilerInterface
             $expression = substr($expression, 1, -1);
         }
 
-        return "<?php echo \$__env->make($expression, ['raw' => true], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
+        return "<?php echo \$__env->make($expression, ['raw' => true], \Illuminate\Support\Arr::except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
     }
 
 }

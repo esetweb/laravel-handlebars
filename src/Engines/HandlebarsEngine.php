@@ -13,18 +13,19 @@ class HandlebarsEngine extends CompilerEngine implements Engine
      * @param  array  $data
      * @return string
      */
-    public function get($path, array $data = array())
+    public function get($path, array $data = [])
     {
         $this->lastCompiled[] = $path;
+
+        $raw = (isset($data['raw']) && $data['raw']) ? true : false;
 
         // If this given view has expired, which means it has simply been edited since
         // it was last compiled, we will re-compile the views so we can evaluate a
         // fresh copy of the view. We'll pass the compiler the path of the view.
-        if ($this->compiler->isExpired($path)) {
+        if (! isset($this->compiledOrNotExpired[$path]) && $this->compiler->isExpired($path)) {
             $this->compiler->compile($path);
         }
 
-        $raw = (isset($data['raw']) && $data['raw']) ? true : false;
         $compiled = $this->compiler->getCompiledPath($path, $raw);
 
         // convert objects to arrays
@@ -34,6 +35,8 @@ class HandlebarsEngine extends CompilerEngine implements Engine
         // typical PHP just like any other templates. We also keep a stack of views
         // which have been rendered for right exception messages to be generated.
         $results = $this->evaluatePath($compiled, $data);
+
+        $this->compiledOrNotExpired[$path] = true;
 
         array_pop($this->lastCompiled);
 
